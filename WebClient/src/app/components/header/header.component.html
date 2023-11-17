@@ -1,0 +1,71 @@
+<nav class="bg-white border-gray-200 fixed top-0 w-full z-30 shadow-lg">
+  <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen py-6 px-8">
+    <a routerLink="/" class="flex items-center space-x-3 ">
+      <img src="../assets/plants-logo.png" class="h-14" alt="Victor Pérez Asuaje Logo" />
+    </a>
+    <button data-collapse-toggle="mega-menu-full" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200   " aria-controls="mega-menu-full" aria-expanded="false">
+      <span class="sr-only">Open main menu</span>
+      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+      </svg>
+    </button>
+    <div id="mega-menu-full" class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
+      <ul class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 text-lg">
+        <li>
+          <button class="flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-zuccini-600 md:p-0" (click)="toggleMegaMenu('plants')">
+            Plants
+          </button>
+        </li>
+        <li>
+          <button class="flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-zuccini-600 md:p-0" (click)="toggleMegaMenu('bulbs')">
+            Bulbs
+          </button>
+        </li>
+        <li>
+          <button class="flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-zuccini-600 md:p-0" (click)="toggleMegaMenu('seeds')">
+            Seeds
+          </button>
+        </li>
+        <li>
+          <button class="flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-zuccini-600 md:p-0" (click)="toggleMegaMenu('materials')">
+            Materials
+          </button>
+        </li>
+        <li>
+          <button class="flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-zuccini-600 md:p-0" (click)="toggleMegaMenu('tools')">
+            Tools
+          </button>
+        </li>
+        <li>
+          <a routerLink="/blog" class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-zuccini-700 md:p-0  ">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-2 gap-3">
+      <a routerLink="/login" class="text-zuccini-700 hover:text-zuccini-800 hover:bg-gray-50 focus:ring-zuccini-300 focus:ring-4 text-lg px-2.5 aspect-square rounded-full my-auto flex items-center justify-center">
+        <fa-icon [icon]="faSignIn"></fa-icon>
+      </a>
+      <button class="text-zuccini-700 hover:text-zuccini-800 hover:bg-gray-50 focus:ring-zuccini-300 focus:ring-4 text-lg px-2.5 aspect-square rounded-full my-auto flex items-center justify-center">
+        <fa-icon [icon]="faCartShopping"></fa-icon>
+      </button>
+    </div>
+  </div>
+
+  @for(menu of this.megaMenus; track menu.name)
+  {
+  <div class="mt-1 bg-white border-gray-200 border-y" [hidden]="this.activeMegaMenu?.name !== menu.name">
+    <ul class="grid max-w-screen-xl px-4 py-5 mx-auto text-gray-900 sm:grid-cols-2 md:grid-cols-3 md:px-6">
+      @for(item of menu?.items; track item.title)
+      {
+      <li>
+        <a routerLink="{{ item.url }}" [queryParams]="{ type: menu.name, category: item.title }" class="block p-3 rounded-lg hover:bg-gray-50 ">
+          <div class="font-semibold">{{ item.title }}</div>
+          <span class="text-sm text-gray-500 ">{{ item.description }}</span>
+        </a>
+      </li>
+      }
+    </ul>
+  </div>
+  }
+
+</nav>
