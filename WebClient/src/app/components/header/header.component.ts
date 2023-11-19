@@ -4,13 +4,13 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { faCartShopping, faSignIn } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-interface MegaMenuItem {
+export interface MegaMenuItem {
   title: string,
   description: string,
   url: string
 }
 
-interface MegaMenu {
+export interface MegaMenu {
   name: string,
   items: MegaMenuItem[]
 }
@@ -111,6 +111,10 @@ export class HeaderComponent {
       items: []
     },
   ]
+
+  closeMegaMenu() {
+    this.activeMegaMenu = undefined;
+  }
 
   toggleMegaMenu(name: string) {
     const menu = this.megaMenus.find(x => x.name === name);

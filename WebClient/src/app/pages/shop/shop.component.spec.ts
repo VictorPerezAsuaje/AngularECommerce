@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { ShopComponent } from './shop.component';
 
@@ -10,8 +11,8 @@ describe('ShopComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ShopComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ShopComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

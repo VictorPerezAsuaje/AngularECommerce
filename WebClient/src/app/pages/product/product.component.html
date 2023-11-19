@@ -1,1 +1,76 @@
-<p>product works!</p>
+<div class="p-8 flex flex-col gap-8">
+
+    <nav class="text-sm text-gray-800">
+        <a href="/" title="Back to the home page">Home</a>
+        <span aria-hidden="true" class="text-gray-600"> >> </span>
+        <a href="/shop" title="Back to the home page">Shop</a>
+        <span aria-hidden="true" class="text-gray-600"> >> </span>
+        <span class="font-bold">{{ product.name | titlecase }}</span>
+    </nav>
+
+    <article class="flex flex-col lg:flex-row gap-8">
+        <img src="https://source.unsplash.com/random?{{product.type.name}},{{ product.category.name }}, {{ product.id }}" class="object-cover h-[50vh] flex-[6] mb-4" />
+
+        <section class="flex-[4]">
+            <header class="text-gray-600">
+                <h2 class="text-2xl mt-4 text-gray-800 flex items-center gap-4">
+                    {{ product.name }}
+
+                    <button class="border-2 text-rose-800 bg-white border-rose-800 hover:bg-rose-800 hover:text-white rounded-full text-xs aspect-square w-8 transition-all duration-200 ease-in-out">
+                        <fa-icon [icon]="faHeart"></fa-icon>
+                    </button>
+                </h2>
+
+                <div class="flex flex-row gap-1 mt-4 w-fit">
+                    <span class="mr-2">{{ product.rating }}</span>
+
+                    <div class="flex flex-row overflow-x-hidden" [style.width]="getRating()">
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <fa-icon [icon]="faStar"></fa-icon>
+                    </div>
+
+                    @if(product.inStock){
+                    <span class="ml-4 text-zuccini-600">In Stock</span>
+                    }
+                    @else {
+                    <span class="ml-4 text-rose-600">No Stock</span>
+                    }
+                </div>
+
+                <p class="my-8">{{ product.description }}</p>
+
+                <p class="text-4xl mt-4 flex flex-row items-center gap-4 ">
+                    {{ getPrice() | currency }}
+
+                    @if(discountApplied !== 0){
+                    <span class="bg-rose-600 text-white text-xs rounded-lg p-2 font-bold">
+                        {{ discountApplied * 100 }}% discount applied!
+                    </span>
+                    }
+                </p>
+
+                <div class="flex flex-row gap-4 items-center mt-8">
+                    <div class="flex flex-row gap-4 border-2 border-gray-nurse-200 p-4">
+                        <button class="" (click)="remove()">
+                            <fa-icon [icon]="faMinus"></fa-icon>
+                        </button>
+
+                        <span contenteditable="true" class="px-2 outline-none" (input)="updateNumberOfItemsSelected($event)">{{ numberOfSelectedProducts }}</span>
+
+                        <button class="" (click)="add()">
+                            <fa-icon [icon]="faPlus"></fa-icon>
+                        </button>
+                    </div>
+
+                    <button class="w-full border-2 text-zuccini-800 bg-white border-zuccini-800 hover:bg-zuccini-800 hover:text-white text-md transition-all duration-200 ease-in-out p-4 select-none">
+                        <fa-icon [icon]="faShoppingCart" class="mr-4"></fa-icon> Add To Cart
+                    </button>
+                </div>
+            </header>
+        </section>
+    </article>
+
+</div>

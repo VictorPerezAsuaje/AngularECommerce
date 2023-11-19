@@ -1,1 +1,90 @@
-<p>shop works!</p>
+<div class="p-8 flex flex-col lg:flex-row gap-8">
+    <aside class="flex-1">
+        <div class="mb-4">
+            <label for="price-range" class="block mb-2 text-md font-medium text-gray-900">
+                PRICE
+            </label>
+            <input id="price-range" type="range" min="0" max="{{ maxPrice }}" value="{{ maxPrice }}" class="w-full h-2 bg-zuccini-50 rounded-lg appearance-none cursor-pointer accent-zuccini-600" (change)="handleMaxPriceChange($event)">
+        </div>
+
+        <div class="mb-4">
+            <label for="productType" class="mb-2 text-md font-medium text-gray-900 flex items-center">
+                PRODUCT TYPE
+                <button class="ml-4 text-[0.5rem] text-rose-600 border-rose-600 border h-4 aspect-square rounded-full font-light" [hidden]="filter.type === undefined" (click)="handleTypeClear()">
+                    <fa-icon [icon]="faX"></fa-icon>
+                </button>
+            </label>
+
+            <div class="flex flex-col px-2">
+                @for(type of sampleData.productTypes; track type.name){
+                <label for="{{ type.name }}" class="text-md mb-2 font-light text-gray-900">
+                    <input id="{{ type.name }}" type="radio" name="productType" value="{{ type.name }}" [checked]="type.name === filter.type" class="mr-4" (change)="handleTypeFilterChange(type.name)" />
+                    {{ type.name | titlecase }}
+                </label>
+                }
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="productType" class="mb-2 text-md font-medium text-gray-900 flex items-center">
+                PRODUCT CATEGORY
+                <button class="ml-4 text-[0.5rem] text-rose-600 border-rose-600 border h-4 aspect-square rounded-full font-light" [hidden]="filter.categories?.length === 0" (click)="handleCategoryClear()">
+                    <fa-icon [icon]="faX"></fa-icon>
+                </button>
+            </label>
+
+            <div class="flex flex-col px-2 overflow-y-auto max-h-60">
+                @for(category of sampleData.productCategories; track category.name){
+                <label for="{{ category.name }}" class="text-md mb-2 font-light text-gray-900">
+                    <input id="{{ category.name }}" type="checkbox" name="productType" value="{{ category.name }}" [checked]="filter.categories?.includes(category.name)" class="mr-4" (change)="handleCategoryFilterChange(category.name)" />
+                    {{ category.name | titlecase }}
+                </label>
+                }
+            </div>
+        </div>
+    </aside>
+
+    <section class="flex-[4]">
+        <nav class="text-sm text-gray-800">
+            <a href="/" title="Back to the home page">Home</a>
+            <span aria-hidden="true" class="text-gray-600"> >> </span>
+            <span class="font-bold">Shop</span>
+        </nav>
+
+        <header class="text-gray-600">
+            <h2 class="text-2xl mt-4 text-gray-800">Shop</h2>
+            <p class="mt-4">Plants abound in our surroundings, yet their contributions extend far beyond their aesthetic appeal. These verdant marvels play a crucial role in sustaining life, harboring a plethora of fascinating capabilities.</p>
+
+            <p class="mt-2">Beyond their ornamental blooms, plants excel as indispensable multitaskers, undertaking tasks ranging from air purification to promoting our well-being. Join us as we embark on a journey into the realm of plants, exploring their remarkable qualities in a lighthearted and informative listicle format. Discover the myriad facets of these botanical wonders that make them essential participants in the intricate dance of life.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mt-8">
+            @for(product of this.filteredProducts ?? this.products; track product.name){
+            <article class="flex flex-col justify-center text-center">
+                <div class="relative overflow-hidden group h-[350px]">
+                    <div class="absolute -bottom-10 w-full group-hover:-translate-y-20 transition-all ease-in-out duration-500">
+                        <div class="bg-white p-2 rounded-full mx-auto w-fit space-x-4">
+                            <button class="border-2 text-zuccini-800 bg-white border-zuccini-800 hover:bg-zuccini-800 hover:text-white rounded-full  text-xs aspect-square w-8 transition-all duration-200 ease-in-out">
+                                <fa-icon [icon]="faHeart"></fa-icon>
+                            </button>
+                            <button class="border-2 text-zuccini-800 bg-white border-zuccini-800 hover:bg-zuccini-800 hover:text-white rounded-full  text-xs aspect-square w-8 transition-all duration-200 ease-in-out">
+                                <fa-icon [icon]="faShoppingCart"></fa-icon>
+                            </button>
+                            <button [routerLink]="['/shop/product', product.id]" class="border-2 text-zuccini-800 bg-white border-zuccini-800 hover:bg-zuccini-800 hover:text-white rounded-full  text-xs aspect-square w-8 transition-all duration-200 ease-in-out">
+                                <fa-icon [icon]="faMagnifyingGlassPlus"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <img src="https://source.unsplash.com/random/350x500/?{{product.type.name}},{{ product.category.name }}, {{ product.id }}" class="object-cover h-[350px] w-full mb-4" />
+                </div>
+
+                <h4 class="text-md text-zuccini-900 mb-2 mt-4 hover:font-bold">
+                    <a [routerLink]="['/shop/product', product.id]">{{ product.name }}</a>
+                </h4>
+                <p>{{ product.price | currency }}</p>
+            </article>
+            }
+        </div>
+    </section>
+</div>
