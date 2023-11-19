@@ -1,6 +1,16 @@
 import { MegaMenu } from "../components/header/header.component";
 import { ProductCategory, ProductType } from "../pages/shop/shop.component";
 
+export interface CartItem {
+    id: string,
+    name: string,
+    price: number,
+    totalPrice: number,
+    amount: number,
+    hasDiscount: boolean,
+    discountApplied: number
+}
+
 export interface Review {
     username: string,
     email: string,

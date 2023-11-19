@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { faCartShopping, faSignIn } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faSignIn, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CartService } from '../../services/cartService/cart.service';
 
 export interface MegaMenuItem {
   title: string,
@@ -25,6 +26,7 @@ export interface MegaMenu {
 export class HeaderComponent {
   faCartShopping = faCartShopping;
   faSignIn = faSignIn;
+  faX = faX;
 
   activeMegaMenu?: MegaMenu;
   megaMenus: MegaMenu[] = [
@@ -112,8 +114,35 @@ export class HeaderComponent {
     },
   ]
 
+  cartMenuOpen: boolean = false;
+
+  constructor(private cartService: CartService) {
+  }
+
+  getCartItems() {
+    return this.cartService.getCartItems();
+  }
+
+  getTotal() {
+    let total = 0;
+    this.cartService.getCartItems().forEach(x => total += x.price * x.amount);
+    return total;
+  }
+
+  removeItem(id: string) {
+    this.cartService.removeCartItem(id);
+  }
+
   closeMegaMenu() {
     this.activeMegaMenu = undefined;
+  }
+
+  closeCartMenu() {
+    this.cartMenuOpen = false;
+  }
+
+  openCartMenu() {
+    this.cartMenuOpen = true;
   }
 
   toggleMegaMenu(name: string) {

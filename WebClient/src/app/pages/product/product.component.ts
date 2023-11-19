@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product, SampleData } from '../../data/data';
+import { CartItem, Product, SampleData } from '../../data/data';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faShoppingCart, faMagnifyingGlassPlus, faStar, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { CartService } from '../../services/cartService/cart.service';
 
 @Component({
   selector: 'app-product',
@@ -23,11 +24,15 @@ export class ProductComponent {
   faMinus = faMinus;
 
   product!: Product;
-  numberOfSelectedProducts = 1;
+  numberOfSelectedProducts = 0;
   discountApplied = 0;
   maxRating = [1, 2, 3, 4, 5];
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  activeTab: string = 'productDetails';
+
+  currentProductRating = 0;
+
+  constructor(private router: Router, private route: ActivatedRoute, private cartService: CartService) {
     this.route.params.subscribe(params => {
       const index = this.sampleData.products.findIndex(x => x.id === params['id']);
 
@@ -36,14 +41,29 @@ export class ProductComponent {
 
       this.product = this.sampleData.products[index];
     });
+
+    this.numberOfSelectedProducts = cartService.getCartItemAmount(this.product.id);
+    this.applyBundleDiscount();
   }
 
-  getRating(): string {
-    return this.product.rating * 18 + "px";
+  getRating(value: number, starWidth: number): string {
+    return value * starWidth + "px";
   }
 
   getPrice() {
     return this.product.price * this.numberOfSelectedProducts - this.product.price * this.discountApplied;
+  }
+
+  handleRatingChange(event: Event) {
+    let input = event.target as HTMLInputElement;
+
+    if (Number(input.value) < 0)
+      input.value = "0";
+
+    if (Number(input.value) > 5)
+      input.value = "5";
+
+    this.currentProductRating = Math.round(Number(input.value) * 10) / 10;
   }
 
   applyBundleDiscount() {
@@ -59,13 +79,27 @@ export class ProductComponent {
       this.discountApplied = 0;
   }
 
+  addToCart() {
+    if (this.numberOfSelectedProducts === 0) return;
+
+    this.cartService.addToCart({
+      id: this.product.id,
+      name: this.product.name,
+      price: this.product.price,
+      totalPrice: this.getPrice(),
+      hasDiscount: this.discountApplied !== 0,
+      discountApplied: this.discountApplied,
+      amount: this.numberOfSelectedProducts
+    });
+  }
+
   add() {
     this.numberOfSelectedProducts = this.numberOfSelectedProducts + 1;
     this.applyBundleDiscount();
   }
 
   remove() {
-    if (this.numberOfSelectedProducts === 1) return;
+    if (this.numberOfSelectedProducts === 0) return;
 
     this.numberOfSelectedProducts = this.numberOfSelectedProducts - 1;
     this.applyBundleDiscount();
@@ -73,27 +107,27 @@ export class ProductComponent {
 
   updateNumberOfItemsSelected(event: Event) {
     if (!(event.target)) {
-      this.numberOfSelectedProducts = 1;
+      this.numberOfSelectedProducts = 0;
       this.applyBundleDiscount();
       return;
     }
 
     const input = (event.target as HTMLElement);
     if (!input) {
-      this.numberOfSelectedProducts = 1;
+      this.numberOfSelectedProducts = 0;
       this.applyBundleDiscount();
       return;
     }
 
     if (!Number(input.textContent)) {
-      this.numberOfSelectedProducts = 1;
+      this.numberOfSelectedProducts = 0;
       input.textContent = this.numberOfSelectedProducts.toString();
       this.applyBundleDiscount();
       return;
     }
 
-    if (Number(input.textContent) <= 0) {
-      this.numberOfSelectedProducts = 1;
+    if (Number(input.textContent) < 0) {
+      this.numberOfSelectedProducts = 0;
       input.textContent = this.numberOfSelectedProducts.toString();
       this.applyBundleDiscount();
       return;

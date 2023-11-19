@@ -1,9 +1,6 @@
 <div class="p-8 flex flex-col gap-8">
-
     <nav class="text-sm text-gray-800">
-        <a href="/" title="Back to the home page">Home</a>
-        <span aria-hidden="true" class="text-gray-600"> >> </span>
-        <a href="/shop" title="Back to the home page">Shop</a>
+        <a routerLink="/shop" title="Back to the home page">Shop</a>
         <span aria-hidden="true" class="text-gray-600"> >> </span>
         <span class="font-bold">{{ product.name | titlecase }}</span>
     </nav>
@@ -24,7 +21,7 @@
                 <div class="flex flex-row gap-1 mt-4 w-fit">
                     <span class="mr-2">{{ product.rating }}</span>
 
-                    <div class="flex flex-row overflow-x-hidden" [style.width]="getRating()">
+                    <div class="flex flex-row overflow-x-hidden" [style.width]="getRating(this.product.rating, 18)">
                         <fa-icon [icon]="faStar"></fa-icon>
                         <fa-icon [icon]="faStar"></fa-icon>
                         <fa-icon [icon]="faStar"></fa-icon>
@@ -65,7 +62,7 @@
                         </button>
                     </div>
 
-                    <button class="w-full border-2 text-zuccini-800 bg-white border-zuccini-800 hover:bg-zuccini-800 hover:text-white text-md transition-all duration-200 ease-in-out p-4 select-none">
+                    <button class="w-full border-2 text-zuccini-800 bg-white border-zuccini-800 hover:bg-zuccini-800 hover:text-white text-md transition-all duration-200 ease-in-out p-4 select-none" (click)="addToCart()">
                         <fa-icon [icon]="faShoppingCart" class="mr-4"></fa-icon> Add To Cart
                     </button>
                 </div>
@@ -73,4 +70,103 @@
         </section>
     </article>
 
+    <div class="pt-4">
+        <div class="flex flex-row gap-4 -mb-[1px]">
+            <button class="border border-gray-nurse-200 py-2 px-4 text-sm  {{ activeTab === 'productDetails' ? 'border-b-white' : '' }}" (click)="activeTab = 'productDetails'">PRODUCT DETAILS</button>
+
+            <button class="border border-gray-nurse-200 py-2 px-4 text-sm  {{ activeTab === 'reviews' ? 'border-b-white' : '' }}" (click)="activeTab = 'reviews'">REVIEWS</button>
+
+            <button class="border border-gray-nurse-200 py-2 px-4 text-sm  {{ activeTab === 'shipping' ? 'border-b-white' : '' }}" (click)="activeTab = 'shipping'">SHIPPING & RETURNS</button>
+        </div>
+
+        <div class="border border-gray-nurse-200 min-h-[25vh] p-8" [hidden]="activeTab === undefined">
+            <div [hidden]="activeTab !== 'productDetails'">
+                {{ product.details }}
+            </div>
+
+            <div [hidden]="activeTab !== 'reviews'">
+                @if(product.reviews.length === 0){
+                <p>No reviews available</p>
+                }
+                @else {
+                @for(review of product.reviews; track review.title){
+                <div class="mb-4">
+                    <h4 class="text-md font-bold">{{ review.title }}</h4>
+                    <h5 class="text-sm font-light text-gray-nurse-300 flex flex-row gap-1 w-fit">
+                        {{ review.username }} - {{ review.rating }}
+
+                        <div class="flex flex-row overflow-x-hidden" [style.width]="getRating(review.rating, 16)">
+                            <fa-icon [icon]="faStar"></fa-icon>
+                            <fa-icon [icon]="faStar"></fa-icon>
+                            <fa-icon [icon]="faStar"></fa-icon>
+                            <fa-icon [icon]="faStar"></fa-icon>
+                            <fa-icon [icon]="faStar"></fa-icon>
+                        </div>
+
+                    </h5>
+                    <p class="py-4">{{ review.body }}</p>
+                </div>
+                }
+                }
+
+
+
+                <hr class="border border-gray-nurse-200 my-4" />
+
+                <form>
+                    <h3 class="text-lg">Write a review</h3>
+
+                    <div class="mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
+                            Name
+                        </label>
+                        <input class="border border-l-gray-nurse-200 w-full p-2">
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
+                            Email
+                        </label>
+                        <input class="border border-l-gray-nurse-200 w-full p-2">
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
+                            Rating
+                        </label>
+
+                        <div class=" flex flex-row items-center gap-4 w-fit">
+                            <input type="number" min="0" max="5" step="0.1" value="{{currentProductRating}}" class="border border-l-gray-nurse-200 w-14 p-2" (input)="handleRatingChange($event)">
+                            <div class="flex flex-row overflow-x-hidden" [style.width]="getRating(currentProductRating, 18)">
+                                <fa-icon [icon]="faStar"></fa-icon>
+                                <fa-icon [icon]="faStar"></fa-icon>
+                                <fa-icon [icon]="faStar"></fa-icon>
+                                <fa-icon [icon]="faStar"></fa-icon>
+                                <fa-icon [icon]="faStar"></fa-icon>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
+                            Review Title
+                        </label>
+                        <input class="border border-l-gray-nurse-200 w-full p-2">
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
+                            Body
+                        </label>
+                        <textarea class="border border-l-gray-nurse-200 w-full h-full p-2"></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <div [hidden]="activeTab !== 'shipping'">
+
+            </div>
+        </div>
+
+    </div>
 </div>
